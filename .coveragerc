@@ -1,0 +1,6 @@
+[run]
+omit =
+    src/main.py
+    src/bot/client.py
+    src/config.py
+    src/logging_config.py
