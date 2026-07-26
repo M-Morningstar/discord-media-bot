@@ -1,0 +1,16 @@
+# Production override — use with the base docker-compose.yml on the Ubuntu Server.
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#
+# This connects the bot to your existing 'prodesk' Docker network so it can
+# reach Radarr and Sonarr by container name instead of a hardcoded IP.
+
+services:
+  discord-media-bot:
+    networks:
+      - prodesk
+
+networks:
+  prodesk:
+    external: true
