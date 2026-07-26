@@ -23,10 +23,25 @@ class RadarrService(BaseArrService):
             LookupError: If no movie is found for the given IMDB ID.
         """
         path = f"/api/v3/movie/lookup?term=imdb:{imdb_id}"
-        movies: list[dict[str, Any]] = await self._get(path)  # type: ignore[assignment]
+        movies = await self._get_list(path)
         if not movies:
             raise LookupError(f"No movie found for IMDB ID: {imdb_id!r}")
         return movies[0]
+
+    async def find_in_library(self, imdb_id: str) -> dict[str, Any] | None:
+        """Check if a movie with the given IMDB ID is already in Radarr's library.
+
+        Args:
+            imdb_id: Lowercase IMDB ID like ``"tt1234567"``.
+
+        Returns:
+            The existing movie entry if found, ``None`` otherwise.
+        """
+        movies = await self._get_list("/api/v3/movie")
+        for movie in movies:
+            if movie.get("imdbId") == imdb_id:
+                return movie
+        return None
 
     @retry(max_attempts=3)
     async def add(

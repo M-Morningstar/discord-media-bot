@@ -83,6 +83,17 @@ class BaseArrService(ABC):
             resp.raise_for_status()
             return cast(dict[str, Any], await resp.json())
 
+    async def _get_list(self, path: str) -> list[dict[str, Any]]:
+        """Perform a GET request and return parsed JSON as a list."""
+        url = f"{self._base_url}{path}"
+        async with self._session.get(
+            url,
+            headers={"X-Api-Key": self._api_key},
+            timeout=aiohttp.ClientTimeout(total=self._timeout),
+        ) as resp:
+            resp.raise_for_status()
+            return cast(list[dict[str, Any]], await resp.json())
+
     async def _post(self, path: str, body: dict[str, Any]) -> dict[str, Any]:
         """Perform a POST request with a JSON body and return parsed JSON."""
         url = f"{self._base_url}{path}"
@@ -94,6 +105,18 @@ class BaseArrService(ABC):
         ) as resp:
             resp.raise_for_status()
             return cast(dict[str, Any], await resp.json())
+
+    @abstractmethod
+    async def find_in_library(self, imdb_id: str) -> dict[str, Any] | None:
+        """Check if media with the given IMDB ID is already in the library.
+
+        Args:
+            imdb_id: Lowercase IMDB ID like ``"tt1234567"``.
+
+        Returns:
+            The existing entry if found, ``None`` otherwise.
+        """
+        ...
 
 
 __all__ = ["BaseArrService"]

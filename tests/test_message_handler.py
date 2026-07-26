@@ -149,6 +149,7 @@ async def test_successful_add_sonarr(mocker: Any, deps: dict[str, Any]) -> None:
 
 async def test_reports_not_found_on_lookup_error(mocker: Any, deps: dict[str, Any]) -> None:
     deps["radarr"].lookup.side_effect = LookupError("No movie found")
+    deps["radarr"].find_in_library.return_value = None
 
     msg = _msg(mocker, "tt0000000", channel_id=111)
     await deps["handler"].handle(msg)

@@ -20,6 +20,9 @@ class ConcreteService(BaseArrService):
     ) -> dict[str, Any]:
         return {"status": "added"}
 
+    async def find_in_library(self, imdb_id: str) -> dict[str, Any] | None:
+        return None
+
 
 async def test_cannot_instantiate_abstract_class() -> None:
     with pytest.raises(TypeError):

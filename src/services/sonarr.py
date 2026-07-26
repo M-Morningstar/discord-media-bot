@@ -23,10 +23,25 @@ class SonarrService(BaseArrService):
             LookupError: If no series is found for the given IMDB ID.
         """
         path = f"/api/v3/series/lookup?term=imdb:{imdb_id}"
-        series_list: list[dict[str, Any]] = await self._get(path)  # type: ignore[assignment]
+        series_list = await self._get_list(path)
         if not series_list:
             raise LookupError(f"No series found for IMDB ID: {imdb_id!r}")
         return series_list[0]
+
+    async def find_in_library(self, imdb_id: str) -> dict[str, Any] | None:
+        """Check if a series with the given IMDB ID is already in Sonarr's library.
+
+        Args:
+            imdb_id: Lowercase IMDB ID like ``"tt1234567"``.
+
+        Returns:
+            The existing series entry if found, ``None`` otherwise.
+        """
+        series_list = await self._get_list("/api/v3/series")
+        for series in series_list:
+            if series.get("imdbId") == imdb_id:
+                return series
+        return None
 
     @retry(max_attempts=3)
     async def add(

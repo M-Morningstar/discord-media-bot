@@ -88,6 +88,17 @@ class MessageHandler:
         try:
             data = await service.lookup(imdb_id)
         except LookupError:
+            # Fallback: check if the item already exists in the library
+            existing = await service.find_in_library(imdb_id)
+            if existing is not None:
+                title = existing.get("title", imdb_id)
+                await self._reporter.send_already_exists(
+                    message,
+                    title=str(title),
+                    imdb_id=imdb_id,
+                    media_type=media_type,
+                )
+                return
             await _report_not_found(self._reporter, message, imdb_id, media_type)
             return
         except Exception:
