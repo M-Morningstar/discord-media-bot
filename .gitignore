@@ -15,6 +15,10 @@ build/
 .vscode/
 .idea/
 
+# Development
+instructions.md
+PROGRESS.md
+
 # Testing
 .pytest_cache/
 .mypy_cache/
@@ -24,3 +28,6 @@ htmlcov/
 
 # Docker
 *.tar.gz
+
+# Local
+.commandcode/
