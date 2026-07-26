@@ -151,12 +151,12 @@ async def _health_handler(request: web.Request) -> web.Response:
     radarr_svc: RadarrService = request.app["radarr"]
     sonarr_svc: SonarrService = request.app["sonarr"]
     try:
-        await radarr_svc.lookup("tt0000001")
+        await radarr_svc._get("/api/v3/system/status")
         radarr_ok = True
     except Exception:
         radarr_ok = False
     try:
-        await sonarr_svc.lookup("tt0000001")
+        await sonarr_svc._get("/api/v3/system/status")
         sonarr_ok = True
     except Exception:
         sonarr_ok = False
