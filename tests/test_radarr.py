@@ -79,7 +79,7 @@ async def test_lookup_returns_movie(mocker: Any) -> None:
     movie = {"title": "Inception", "tmdbId": 27205, "year": 2010}
     session = _mock_session(
         mocker,
-        gets={"/api/v3/movie/lookup/imdb?imdbId=tt1375666": [movie]},
+        gets={"/api/v3/movie/lookup?term=imdb:tt1375666": [movie]},
     )
     svc = RadarrService(
         session=session,
@@ -93,7 +93,7 @@ async def test_lookup_returns_movie(mocker: Any) -> None:
 async def test_lookup_raises_on_empty_results(mocker: Any) -> None:
     session = _mock_session(
         mocker,
-        gets={"/api/v3/movie/lookup/imdb?imdbId=tt0000000": []},
+        gets={"/api/v3/movie/lookup?term=imdb:tt0000000": []},
     )
     svc = RadarrService(
         session=session,

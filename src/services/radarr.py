@@ -22,7 +22,7 @@ class RadarrService(BaseArrService):
         Raises:
             LookupError: If no movie is found for the given IMDB ID.
         """
-        path = f"/api/v3/movie/lookup/imdb?imdbId={imdb_id}"
+        path = f"/api/v3/movie/lookup?term=imdb:{imdb_id}"
         movies: list[dict[str, Any]] = await self._get(path)  # type: ignore[assignment]
         if not movies:
             raise LookupError(f"No movie found for IMDB ID: {imdb_id!r}")
